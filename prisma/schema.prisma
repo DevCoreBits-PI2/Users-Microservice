@@ -1,0 +1,35 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model administrators {
+  id_administrator Int         @id @default(autoincrement())
+  first_name       String      @db.VarChar(100)
+  last_name        String      @db.VarChar(100)
+  age              Int
+  email            String      @unique @db.VarChar(100)
+  employees        employees[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model employees {
+  id_employee      Int            @id @default(autoincrement())
+  first_name       String         @db.VarChar(100)
+  last_name        String         @db.VarChar(100)
+  age              Int
+  email            String         @unique @db.VarChar(100)
+  code             Float
+  status           String         @db.VarChar(20)
+  salary           Float
+  photo_url        String
+  id_position      Int
+  id_manager       Int?
+  id_administrator Int
+  administrators   administrators @relation(fields: [id_administrator], references: [id_administrator], onDelete: Cascade, onUpdate: NoAction, map: "fk_administrator")
+  employees        employees?     @relation("employeesToemployees", fields: [id_manager], references: [id_employee], onUpdate: NoAction, map: "fk_manager")
+  other_employees  employees[]    @relation("employeesToemployees")
+}

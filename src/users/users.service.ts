@@ -1,9 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { NATS_SERVICE } from 'src/config';
+import { ClientProxy } from '@nestjs/microservices';
+import { PrismaService } from 'src/lib/prisma';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @Inject(NATS_SERVICE) private readonly client: ClientProxy,
+    private readonly prisma: PrismaService
+  ){}
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
